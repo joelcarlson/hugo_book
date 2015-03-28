@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>
+    From Zero to Data Analysis! // My New Hugo Site
+  </title>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="Joel Carlson">
+
+  <meta property="og:title" content="From Zero to Data Analysis!" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="http://localhost:1313/post/01%20Introduction/" />
+
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/base-min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css">
+  
+  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css">
+  
+  
+
+  <link rel="stylesheet" href="http://localhost:1313//css/redlounge.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,200,100,700,300,500,600,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="My New Hugo Site" />
+
+    
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/tomorrow-night-bright.min.css">
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+
+  
+
+  
+</head>
+
+<body>
+	
+
+	<div id="layout" class="pure-g">
+    <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    
+
+    
+    
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item"><span class="nav-item-separator">//</span><a href="http://localhost:1313/">Home</a></li>
+        
+      </ul>
+    </nav>
+
+    
+
+  </div>
+</div>
+
+	
+	
+
+    <div class="content pure-u-1 pure-u-md-3-4">
+		<a name="top"></a>
+		
+
+		
+			
+		    <div id="toc" class="pure-u-1 pure-u-md-1-4">
+				<small class="toc-label">Contents</small>
+		   	 	<nav id="TableOfContents">
+<ul>
+<li><a href="#a-quick-motivating-example:baed039ad8827046d12c3927f73d0425">A quick motivating example</a>
+<ul>
+<li>
+<ul>
+<li><a href="#base-r-solution:baed039ad8827046d12c3927f73d0425">Base R solution</a></li>
+<li><a href="#modern-solution:baed039ad8827046d12c3927f73d0425">Modern solution</a></li>
+<li><a href="#is-the-modern-solution-better:baed039ad8827046d12c3927f73d0425">Is the modern solution better?</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#where-to-go-from-here:baed039ad8827046d12c3927f73d0425">Where to go from here?</a></li>
+</ul>
+</nav>
+		    </div>
+		    
+	    
+  		<section class="post">
+            <h1 class="post-title">
+              <a href="/post/01%20Introduction/">From Zero to Data Analysis!</a>
+            </h1>
+            <h3 class="post-subtitle">
+            	
+            </h3>
+            
+            	<span class="post-date">
+                	<span class="post-date-day"><sup>28</sup></span><span class="post-date-separator">/</span><span class="post-date-month">Mar</span> <span class="post-date-year">2015</span>
+            	</span>
+            	
+            
+            	
+            		<span class="post-author-single">By <a class="post-author"  target="">Joel Carlson</a></span>
+            		
+
+
+
+
+            	
+            
+
+			
+			
+
+			
+
+			
+
+            
+
+<p>It&rsquo;s my philosophy that a person should look to do things in the most efficient way possible. Many tutorials on using R for data analysis and machine learning exist, however many of these rely on base R functionality. While it is arguably a good thing to have a deep understanding of the fundamentals of the language you are using to do your data analysis, I am of the opinion that it isn&rsquo;t essential, and is definitely not the most efficient way. There exist many tools built on top of R that make data analysis a much simpler process, and are advantageous for a hopeful practicioner.</p>
+
+<h1 id="a-quick-motivating-example:baed039ad8827046d12c3927f73d0425">A quick motivating example</h1>
+
+<p>Let&rsquo;s take a quick look at a simple dataset, the famous <code>mtcars</code></p>
+
+<pre><code># load the dataset:
+data(mtcars)
+# The columns of mtcars are named:
+colnames(mtcars)
+
+##  [1] &quot;mpg&quot;  &quot;cyl&quot;  &quot;disp&quot; &quot;hp&quot;   &quot;drat&quot; &quot;wt&quot;   &quot;qsec&quot; &quot;vs&quot;   &quot;am&quot;   &quot;gear&quot;
+## [11] &quot;carb&quot;
+</code></pre>
+
+<p>Consider a very common operation in data analysis: selecting a set of columns from a dataset, and creating a new colum derived from the selected columns.</p>
+
+<p>Let&rsquo;s say we want to extract the <code>cyl</code>, <code>hp</code>, <code>drat</code> and <code>wt</code> columns. Then, we want to create a new column which is a ratio of the <code>hp</code> to the <code>wt</code> values.</p>
+
+<h3 id="base-r-solution:baed039ad8827046d12c3927f73d0425">Base R solution</h3>
+
+<p>In base R there are several ways to do so:</p>
+
+<pre><code>#Method 1: by column number
+method_1 &lt;- mtcars[, c(2, 4:6)]
+method_1[,5] &lt;- method_1[,2] / method_1[,4]
+
+#Method 2: by column name
+method_2 &lt;- mtcars[, c(&quot;cyl&quot;, &quot;hp&quot;, &quot;drat&quot;, &quot;wt&quot;)]
+method_2[,&quot;hp_wt_ratio&quot;] &lt;- method_2[,&quot;hp&quot;] / method_2[,&quot;wt&quot;]
+
+#Method 3: the $ operator
+method_3 &lt;- data.frame(&quot;cyl&quot; = mtcars$cyl, &quot;hp&quot; = mtcars$hp, &quot;drat&quot; = mtcars$drat, &quot;wt&quot; = mtcars$wt)
+method_3$hp_wt_ratio &lt;- method_3$hp / method_3$wt 
+</code></pre>
+
+<p>All of these methods return a data frame containing the desired columns. This data set, however, has the names of the rows encoded as <code>row.names</code>, which is not a column in the same way as the other variables. This is bad practice, and leads to <code>method_3</code> not being equal to the other two methods.</p>
+
+<p>Do these methods look particularly intuitive? Not to me. There is the comma sitting inside the brackets, the columns names are sometimes in quotation marks and sometimes not. Is there a better solution?</p>
+
+<h3 id="modern-solution:baed039ad8827046d12c3927f73d0425">Modern solution</h3>
+
+<p>There is a much simpler solution offered to us by the <code>dplyr</code> package written by <a href="http://had.co.nz/">Hadley Wickham</a>.</p>
+
+<p>This is what a more modern solution might look like:</p>
+
+<pre><code>#Load the package so that we can use the functions it provides
+library(dplyr)
+
+#Use the select() function to get the columns
+method_4 &lt;- select(mtcars, cyl, hp, drat, wt)
+#Use the mutate() function to name and calculate the new column
+method_4 &lt;- mutate(method_4, hp_wt_ratio = hp / wt)
+</code></pre>
+
+<p>Actually, this can be further simplified into a single call using &ldquo;pipes&rdquo; (more on these later) as follows:</p>
+
+<pre><code>method5 &lt;- mtcars %&gt;% 
+  select(cyl, hp, drat, wt) %&gt;%
+  mutate(hp_wt_ratio = hp / wt)
+</code></pre>
+
+<h3 id="is-the-modern-solution-better:baed039ad8827046d12c3927f73d0425">Is the modern solution better?</h3>
+
+<p>Is this simpler? In my opinion: yes. <code>method_5</code> can be essentially read out in plain english, &ldquo;Take the mtcars data, select these columns, mutate these variables into a new column&rdquo;. Furthemore, the modern solution does away with confusing quotation marks and commas.</p>
+
+<h1 id="where-to-go-from-here:baed039ad8827046d12c3927f73d0425">Where to go from here?</h1>
+
+<p>I hope that example was enough to sway you into thinking that the base R solution is not always the best method.
+In this set of tutorials we will go from installing R to applying machine learning algorithms to a real world dataset. The next lesson will be concerned with helping a beginner user to set up an R ecosystem with the packages we will use throughout the rest of the lessons; if you are already set up in that regard then feel free to skip it.</p>
+
+<p>the following lessons we will explore the verbs of data cleaning, data analysis, and finally machine learning. Along the way we will explore best practices for keeping your analysis organized and reproducible, and also methods for presenting your data. Let&rsquo;s get started!</p>
+
+	
+			
+
+			
+
+			
+				<div class="paging">
+					<span class="paging-label">More Reading</span>
+					
+					<div class="paging-newer">
+						<span class="dark-red">Newer</span><span class="decorative-marker">//</span>
+						<a class="paging-link" href="/post/first/">first</a>
+		            </div>
+		            
+
+					
+					<div class="paging-older">
+						<span class="dark-red">Older</span><span class="decorative-marker">//</span>
+			            <a class="paging-link" href="/about/">about</a>
+		            </div>
+		            
+	            </div>
+            
+          </section>
+          
+          	
+          
+        
+      <div class="footer">
+	<hr class="thin" />
+	<div class="pure-menu pure-menu-horizontal pure-menu-open">
+		<ul class="footer-menu">
+		
+		</ul>
+	</div>
+
+	<p>&copy; 2015. All rights reserved. </p>
+</div>
+    </div>
+  </div>
+	
+
+	
+
+  
+</body>
+</html>
