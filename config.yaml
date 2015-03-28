@@ -1,0 +1,10 @@
+---
+contentdir: "content"
+layoutdir: "layouts"
+publishdir: "public"
+indexes:
+  category: "categories"
+baseurl: "http://joelcarlson.github.io/hugo_book"
+title: "An R tutorial!"
+canonifyurls: true
+...

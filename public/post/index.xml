@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on My New Hugo Site</title>
+    <link>http://yourSiteHere/post/</link>
+    <description>Recent content in Posts on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 Mar 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://yourSiteHere/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>From Zero to Data Analysis!</title>
+      <link>http://yoursitehere/post/01%20Introduction/</link>
+      <pubDate>Sat, 28 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://yoursitehere/post/01%20Introduction/</guid>
+      <description>
+
+&lt;p&gt;It&amp;rsquo;s my philosophy that a person should look to do things in the most efficient way possible. Many tutorials on using R for data analysis and machine learning exist, however many of these rely on base R functionality. While it is arguably a good thing to have a deep understanding of the fundamentals of the language you are using to do your data analysis, I am of the opinion that it isn&amp;rsquo;t essential, and is definitely not the most efficient way. There exist many tools built on top of R that make data analysis a much simpler process, and are advantageous for a hopeful practicioner.&lt;/p&gt;
+
+&lt;h1 id=&#34;a-quick-motivating-example:baed039ad8827046d12c3927f73d0425&#34;&gt;A quick motivating example&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s take a quick look at a simple dataset, the famous &lt;code&gt;mtcars&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# load the dataset:
+data(mtcars)
+# The columns of mtcars are named:
+colnames(mtcars)
+
+##  [1] &amp;quot;mpg&amp;quot;  &amp;quot;cyl&amp;quot;  &amp;quot;disp&amp;quot; &amp;quot;hp&amp;quot;   &amp;quot;drat&amp;quot; &amp;quot;wt&amp;quot;   &amp;quot;qsec&amp;quot; &amp;quot;vs&amp;quot;   &amp;quot;am&amp;quot;   &amp;quot;gear&amp;quot;
+## [11] &amp;quot;carb&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Consider a very common operation in data analysis: selecting a set of columns from a dataset, and creating a new colum derived from the selected columns.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s say we want to extract the &lt;code&gt;cyl&lt;/code&gt;, &lt;code&gt;hp&lt;/code&gt;, &lt;code&gt;drat&lt;/code&gt; and &lt;code&gt;wt&lt;/code&gt; columns. Then, we want to create a new column which is a ratio of the &lt;code&gt;hp&lt;/code&gt; to the &lt;code&gt;wt&lt;/code&gt; values.&lt;/p&gt;
+
+&lt;h3 id=&#34;base-r-solution:baed039ad8827046d12c3927f73d0425&#34;&gt;Base R solution&lt;/h3&gt;
+
+&lt;p&gt;In base R there are several ways to do so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#Method 1: by column number
+method_1 &amp;lt;- mtcars[, c(2, 4:6)]
+method_1[,5] &amp;lt;- method_1[,2] / method_1[,4]
+
+#Method 2: by column name
+method_2 &amp;lt;- mtcars[, c(&amp;quot;cyl&amp;quot;, &amp;quot;hp&amp;quot;, &amp;quot;drat&amp;quot;, &amp;quot;wt&amp;quot;)]
+method_2[,&amp;quot;hp_wt_ratio&amp;quot;] &amp;lt;- method_2[,&amp;quot;hp&amp;quot;] / method_2[,&amp;quot;wt&amp;quot;]
+
+#Method 3: the $ operator
+method_3 &amp;lt;- data.frame(&amp;quot;cyl&amp;quot; = mtcars$cyl, &amp;quot;hp&amp;quot; = mtcars$hp, &amp;quot;drat&amp;quot; = mtcars$drat, &amp;quot;wt&amp;quot; = mtcars$wt)
+method_3$hp_wt_ratio &amp;lt;- method_3$hp / method_3$wt 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of these methods return a data frame containing the desired columns. This data set, however, has the names of the rows encoded as &lt;code&gt;row.names&lt;/code&gt;, which is not a column in the same way as the other variables. This is bad practice, and leads to &lt;code&gt;method_3&lt;/code&gt; not being equal to the other two methods.&lt;/p&gt;
+
+&lt;p&gt;Do these methods look particularly intuitive? Not to me. There is the comma sitting inside the brackets, the columns names are sometimes in quotation marks and sometimes not. Is there a better solution?&lt;/p&gt;
+
+&lt;h3 id=&#34;modern-solution:baed039ad8827046d12c3927f73d0425&#34;&gt;Modern solution&lt;/h3&gt;
+
+&lt;p&gt;There is a much simpler solution offered to us by the &lt;code&gt;dplyr&lt;/code&gt; package written by &lt;a href=&#34;http://had.co.nz/&#34;&gt;Hadley Wickham&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is what a more modern solution might look like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#Load the package so that we can use the functions it provides
+library(dplyr)
+
+#Use the select() function to get the columns
+method_4 &amp;lt;- select(mtcars, cyl, hp, drat, wt)
+#Use the mutate() function to name and calculate the new column
+method_4 &amp;lt;- mutate(method_4, hp_wt_ratio = hp / wt)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Actually, this can be further simplified into a single call using &amp;ldquo;pipes&amp;rdquo; (more on these later) as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;method5 &amp;lt;- mtcars %&amp;gt;% 
+  select(cyl, hp, drat, wt) %&amp;gt;%
+  mutate(hp_wt_ratio = hp / wt)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;is-the-modern-solution-better:baed039ad8827046d12c3927f73d0425&#34;&gt;Is the modern solution better?&lt;/h3&gt;
+
+&lt;p&gt;Is this simpler? In my opinion: yes. &lt;code&gt;method_5&lt;/code&gt; can be essentially read out in plain english, &amp;ldquo;Take the mtcars data, select these columns, mutate these variables into a new column&amp;rdquo;. Furthemore, the modern solution does away with confusing quotation marks and commas.&lt;/p&gt;
+
+&lt;h1 id=&#34;where-to-go-from-here:baed039ad8827046d12c3927f73d0425&#34;&gt;Where to go from here?&lt;/h1&gt;
+
+&lt;p&gt;I hope that example was enough to sway you into thinking that the base R solution is not always the best method.
+In this set of tutorials we will go from installing R to applying machine learning algorithms to a real world dataset. The next lesson will be concerned with helping a beginner user to set up an R ecosystem with the packages we will use throughout the rest of the lessons; if you are already set up in that regard then feel free to skip it.&lt;/p&gt;
+
+&lt;p&gt;the following lessons we will explore the verbs of data cleaning, data analysis, and finally machine learning. Along the way we will explore best practices for keeping your analysis organized and reproducible, and also methods for presenting your data. Let&amp;rsquo;s get started!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>From zero to hero in md!</title>
+      <link>http://yoursitehere/post/A%20second%20intro/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://yoursitehere/post/A%20second%20intro/</guid>
+      <description>
+
+&lt;p&gt;It&amp;rsquo;s my philosophy that a person should look to do things in the most efficient way possible. Many tutorials on using R for data analysis and machine learning exist, however many of these rely on base R functionality. While it is arguably a good thing to have a deep understanding of the fundamentals of the language you are using to do your data analysis, I am of the opinion that it isn&amp;rsquo;t essential, and is definitely not the most efficient way. There exist many tools built on top of R that make data analysis a much simpler process, and are advantageous for a hopeful practicioner.&lt;/p&gt;
+
+&lt;h1 id=&#34;a-quick-motivating-example:7411556715977f089302deca1fdb77d3&#34;&gt;A quick motivating example&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s take a quick look at a simple dataset, the famous &lt;code&gt;mtcars&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}&lt;/p&gt;
+
+&lt;h1 id=&#34;load-the-dataset:7411556715977f089302deca1fdb77d3&#34;&gt;load the dataset:&lt;/h1&gt;
+
+&lt;p&gt;data(mtcars)&lt;/p&gt;
+
+&lt;h1 id=&#34;the-columns-of-mtcars-are-named:7411556715977f089302deca1fdb77d3&#34;&gt;The columns of mtcars are named:&lt;/h1&gt;
+
+&lt;p&gt;colnames(mtcars)
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;{% highlight text %}&lt;/p&gt;
+
+&lt;h2 id=&#34;1-mpg-cyl-disp-hp-drat-wt-qsec-vs-am-gear:7411556715977f089302deca1fdb77d3&#34;&gt;[1] &amp;ldquo;mpg&amp;rdquo;  &amp;ldquo;cyl&amp;rdquo;  &amp;ldquo;disp&amp;rdquo; &amp;ldquo;hp&amp;rdquo;   &amp;ldquo;drat&amp;rdquo; &amp;ldquo;wt&amp;rdquo;   &amp;ldquo;qsec&amp;rdquo; &amp;ldquo;vs&amp;rdquo;   &amp;ldquo;am&amp;rdquo;   &amp;ldquo;gear&amp;rdquo;&lt;/h2&gt;
+
+&lt;h2 id=&#34;11-carb:7411556715977f089302deca1fdb77d3&#34;&gt;[11] &amp;ldquo;carb&amp;rdquo;&lt;/h2&gt;
+
+&lt;p&gt;{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;Consider a very common operation in data analysis: selecting a set of columns from a dataset, and creating a new colum derived from the selected columns.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s say we want to extract the &lt;code&gt;cyl&lt;/code&gt;, &lt;code&gt;hp&lt;/code&gt;, &lt;code&gt;drat&lt;/code&gt; and &lt;code&gt;wt&lt;/code&gt; columns. Then, we want to create a new column which is a ratio of the &lt;code&gt;hp&lt;/code&gt; to the &lt;code&gt;wt&lt;/code&gt; values.&lt;/p&gt;
+
+&lt;p&gt;###Base R solution&lt;/p&gt;
+
+&lt;p&gt;In base R there are several ways to do so:&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+#Method 1: by column number
+method_1 &amp;lt;- mtcars[, c(2, 4:6)]
+method_1[,5] &amp;lt;- method_1[,2] / method_1[,4]&lt;/p&gt;
+
+&lt;p&gt;#Method 2: by column name
+method_2 &amp;lt;- mtcars[, c(&amp;ldquo;cyl&amp;rdquo;, &amp;ldquo;hp&amp;rdquo;, &amp;ldquo;drat&amp;rdquo;, &amp;ldquo;wt&amp;rdquo;)]
+method_2[,&amp;ldquo;hp_wt_ratio&amp;rdquo;] &amp;lt;- method_2[,&amp;ldquo;hp&amp;rdquo;] / method_2[,&amp;ldquo;wt&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;#Method 3: the $ operator
+method_3 &amp;lt;- data.frame(&amp;ldquo;cyl&amp;rdquo; = mtcars$cyl, &amp;ldquo;hp&amp;rdquo; = mtcars$hp, &amp;ldquo;drat&amp;rdquo; = mtcars$drat, &amp;ldquo;wt&amp;rdquo; = mtcars$wt)
+method_3$hp_wt_ratio &amp;lt;- method_3$hp / method_3$wt
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;All of these methods return a data frame containing the desired columns. This data set, however, has the names of the rows encoded as &lt;code&gt;row.names&lt;/code&gt;, which is not a column in the same way as the other variables. This is bad practice, and leads to &lt;code&gt;method_3&lt;/code&gt; not being equal to the other two methods.&lt;/p&gt;
+
+&lt;p&gt;Do these methods look particularly intuitive? Not to me. There is the comma sitting inside the brackets, the columns names are sometimes in quotation marks and sometimes not. Is there a better solution?&lt;/p&gt;
+
+&lt;p&gt;###Modern solution&lt;/p&gt;
+
+&lt;p&gt;There is a much simpler solution offered to us by the &lt;code&gt;dplyr&lt;/code&gt; package written by &lt;a href=&#34;http://had.co.nz/&#34;&gt;Hadley Wickham&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is what a more modern solution might look like:&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+#Load the package so that we can use the functions it provides
+library(dplyr)&lt;/p&gt;
+
+&lt;p&gt;#Use the select() function to get the columns
+method_4 &amp;lt;- select(mtcars, cyl, hp, drat, wt)
+#Use the mutate() function to name and calculate the new column
+method_4 &amp;lt;- mutate(method_4, hp_wt_ratio = hp / wt)
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;Actually, this can be further simplified into a single call using &amp;ldquo;pipes&amp;rdquo; (more on these later) as follows:&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+method5 &amp;lt;- mtcars %&amp;gt;%
+  select(cyl, hp, drat, wt) %&amp;gt;%
+  mutate(hp_wt_ratio = hp / wt)
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;###Is the modern solution better?&lt;/p&gt;
+
+&lt;p&gt;Is this simpler? In my opinion: yes. &lt;code&gt;method_5&lt;/code&gt; can be essentially read out in plain english, &amp;ldquo;Take the mtcars data, select these columns, mutate these variables into a new column&amp;rdquo;. Furthemore, the modern solution does away with confusing quotation marks and commas.&lt;/p&gt;
+
+&lt;p&gt;#Where to go from here?&lt;/p&gt;
+
+&lt;p&gt;I hope that example was enough to sway you into thinking that the base R solution is not always the best method.
+In this set of tutorials we will go from installing R to applying machine learning algorithms to a real world dataset. The next lesson will be concerned with helping a beginner user to set up an R ecosystem with the packages we will use throughout the rest of the lessons; if you are already set up in that regard then feel free to skip it.&lt;/p&gt;
+
+&lt;p&gt;the following lessons we will explore the verbs of data cleaning, data analysis, and finally machine learning. Along the way we will explore best practices for keeping your analysis organized and reproducible, and also methods for presenting your data. Let&amp;rsquo;s get started!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
